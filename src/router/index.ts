@@ -13,8 +13,8 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/quiz',
-    name: 'quiz',
+    path: '/play',
+    name: 'play',
     component: QuizView
   },
   {

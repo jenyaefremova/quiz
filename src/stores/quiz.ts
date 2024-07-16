@@ -68,7 +68,7 @@ export const useQuizStore = defineStore('quiz', {
         this.loading = true;
         this.gamesCount--;
         await this.fetchQuestions();
-        router.push('/quiz');
+        router.push('/play');
       }
     },
   },
