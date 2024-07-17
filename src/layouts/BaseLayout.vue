@@ -25,7 +25,6 @@ import Navigation from '../components/Navigation.vue';
   flex: 1;
   padding: 30px 20px;
   display: flex;
-  height: calc(100vh - 120px);
 }
 
 .footer {
