@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import { getScoreIncrement } from '../utils/getScoreIncrement';
 
 interface Question {
   question: string;
@@ -44,17 +45,7 @@ export const useQuizStore = defineStore('quiz', {
     checkAnswer(answer: string, router: any) {
       const currentQuestion = this.questions[this.currentIndex];
       if (answer === currentQuestion.correct_answer) {
-        switch (currentQuestion.difficulty) {
-          case 'easy':
-            this.score += 1;
-            break;
-          case 'medium':
-            this.score += 3;
-            break;
-          case 'hard':
-            this.score += 5;
-            break;
-        }
+        this.score += getScoreIncrement(currentQuestion.difficulty);
       }
       if (this.currentIndex === this.questions.length - 1) {
         this.showScore = true;

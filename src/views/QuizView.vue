@@ -34,10 +34,12 @@
           </div>
         </div>
       </div>
+      <transition name="fade">
+        <div v-if="showScoreAnimation" class="score-animation">+{{ currentScore }}</div>
+      </transition>
     </div>
   </GameLayout>
 </template>
-
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useQuizStore } from '../stores/quiz';
@@ -45,6 +47,7 @@ import GameLayout from '../layouts/GameLayout.vue';
 import Button from '../components/Button.vue';
 import router from '../router';
 import Loader from '../components/ui/icons/Loader.vue';
+import { getScoreIncrement } from '../utils/getScoreIncrement';
 
 const quizStore = useQuizStore();
 
@@ -54,6 +57,8 @@ const showScore = computed(() => quizStore.showScore);
 const loading = computed(() => quizStore.loading);
 const questions = computed(() => quizStore.questions);
 const selectedAnswer = ref<string | null>(null);
+const showScoreAnimation = ref(false);
+const currentScore = ref(0);
 
 const difficultyClass = computed(() => {
   if (!currentQuestion.value) return '';
@@ -86,13 +91,20 @@ const isButtonDisabled = ref(false);
 
 const checkAnswer = (answer: string) => {
   selectedAnswer.value = answer;
+  const correct = answer === currentQuestion.value.correct_answer;
+  if (correct) {
+    currentScore.value = getScoreIncrement(currentQuestion.value.difficulty);
+    showScoreAnimation.value = true;
+  }
   isButtonDisabled.value = true;
   setTimeout(() => {
     quizStore.checkAnswer(answer, router);
     selectedAnswer.value = null;
+    showScoreAnimation.value = false;
     isButtonDisabled.value = false;
-  }, 1000);
+  }, 2000);
 };
+
 
 onMounted(() => {
   quizStore.fetchQuestions();
@@ -135,7 +147,7 @@ onMounted(() => {
 }
 
 .questionNumber {
-  min-width: 40px;
+  min-width: 46px;
 }
 
 .description {
@@ -212,4 +224,16 @@ onMounted(() => {
   background-color: #6c757d;
   color: white;
 }
+
+.score-animation {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2em;
+  color: #fff;
+}
+
 </style>
+
