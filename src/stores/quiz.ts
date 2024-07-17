@@ -17,6 +17,7 @@ export const useQuizStore = defineStore('quiz', {
     totalPoints: parseInt(localStorage.getItem('totalPoints') || '0', 10),
     questions: [] as Question[],
     currentIndex: 0,
+    timeBeforeGameIncrese: 0,
     showScore: false,
     loading: false,
     lastIncrementTime: localStorage.getItem('lastIncrementTime') || '',
@@ -81,13 +82,16 @@ export const useQuizStore = defineStore('quiz', {
     incrementGamesAvailable() {
       const currentTime = new Date().getTime();
       const lastIncrementTime = new Date(this.lastIncrementTime).getTime();
-      const increaseTime = 24 * 60 * 60 * 1000; // 24 hours
+      const eightHours = 8 * 60 * 60 * 1000;
 
-      if (!this.lastIncrementTime || currentTime - lastIncrementTime >= increaseTime) {
-        this.gamesAvailable += 7;
+      if (!this.lastIncrementTime || currentTime - lastIncrementTime >= eightHours) {
+        this.gamesAvailable += 3;
         this.lastIncrementTime = new Date().toISOString();
         localStorage.setItem('lastIncrementTime', this.lastIncrementTime);
         localStorage.setItem('gamesAvailable', this.gamesAvailable.toString());
+        this.timeBeforeGameIncrese = 0;
+      } else {
+        this.timeBeforeGameIncrese = eightHours - (currentTime - lastIncrementTime);
       }
     }
   },

@@ -19,7 +19,7 @@
       <div class="startGame">
         <p>Games available: {{ gamesAvailable }}</p>
         <Button type="button" fluid class="btn" @click="startGame" :disabled="gamesAvailable == 0" :isLoading="isLoading" >
-          {{ gamesAvailable == 0 ?  'Come tomorrow' : 'Take a Quiz'}}
+          {{ gamesAvailable == 0 ? 'Play in ' + timeBeforeGameIncrese : 'Take a Quiz'}}
         </Button>
       </div>
     </div>
@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import BaseLayout from '../layouts/BaseLayout.vue';
 import Button from '../components/Button.vue';
 import { useRouter } from 'vue-router';
@@ -44,14 +44,35 @@ const startGame = async () => {
   await quizStore.playQuiz(router); 
 };
 
+const interval = ref<number | null>(null);
+
 onMounted(() => {
   quizStore.incrementGamesAvailable();
+  interval.value = window.setInterval(() => {
+    quizStore.incrementGamesAvailable();
+  }, 1000);
+});
+
+onUnmounted(() => {
+  if (interval.value !== null) {
+    clearInterval(interval.value);
+  }
+});
+
+
+const timeBeforeGameIncrese = computed(() => {
+  const time = quizStore.timeBeforeGameIncrese;
+  if (time > 0) {
+    const hours = Math.floor(time / 3600000);
+    const minutes = Math.floor((time % 3600000) / 60000);
+    const seconds = Math.floor((time % 60000) / 1000);
+    return `${hours > 0 ? hours + 'h ' : ''}${minutes}m ${seconds}s`;
+  }
+  return '';
 });
 </script>
 
 <style scoped>
-
-
 .profileImg {
   width: 64px;
   height: 64px;
@@ -62,6 +83,7 @@ onMounted(() => {
   width: 100%;
   padding: 0 20px;
 }
+
 .points {
   font-size: 3em;
   line-height: 110%;

@@ -7,9 +7,9 @@
           <div v-if="!showScore">
             <div class="question" v-if="currentQuestion">
               <div class="questionData">
-                <p class="questionName">{{ questionNumber }} / {{ questions.length }}</p>
+                <p class="questionNumber">{{ questionNumber }} / {{ questions.length }}</p>
                 <div class="description">
-                  <p v-html="currentQuestion.category"></p>
+                  <p class="category" v-html="currentQuestion.category"></p>
                   <p>Difficulty: <span class="level" :class="difficultyClass">{{ currentQuestion.difficulty }}</span></p>
                 </div>
                 
@@ -134,14 +134,18 @@ onMounted(() => {
   align-items: flex-start;
 }
 
+.questionNumber {
+  min-width: 40px;
+}
+
 .description {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
 }
 
-.level {
-  font-weight: bold;
+.category {
+  text-align: right;
 }
 
 .questionBody {
