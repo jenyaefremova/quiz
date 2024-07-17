@@ -40,8 +40,7 @@ export default defineComponent({
   justify-content: center;
   gap: 20px;
   flex: 1;
-  height: 100%;
-  min-height: calc(100vh - 120px);
+  height: calc(100vh - 120px);
   max-width: 500px;
   margin: auto;
 }

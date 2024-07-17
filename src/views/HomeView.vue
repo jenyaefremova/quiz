@@ -94,8 +94,7 @@ const timeBeforeGameIncrese = computed(() => {
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
-  height: 100%;
-  min-height: calc(100vh - 120px);
+  height: calc(100vh - 120px);
   max-width: 500px;
   margin: auto;
 }
