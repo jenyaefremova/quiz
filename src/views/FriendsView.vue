@@ -1,8 +1,18 @@
 <template>
+
   <BaseLayout>
-    <div>
-      <h1>Invite Friends</h1>
-      <p class="mt-20">You will recive 100 points for each friend and +10% of their score</p>
+  
+    <div class="layout">
+      <div class="statistic">
+        <div class="profile">
+          <h1>Invite friends</h1>
+          <p class="mt-20">Cooming soon!</p>
+        </div>
+        <!-- <div class="leaderboard">
+          <h2>Your place: 1</h2>
+        </div> -->
+      </div>
+      <Avocado class="center"/>
     </div>
   </BaseLayout>
 
@@ -12,18 +22,39 @@
 
 import { defineComponent } from 'vue';
 import BaseLayout from '../layouts/BaseLayout.vue';
+import Avocado from '../components/ui/icons/Avocado.vue';
 
 export default defineComponent({
-  name: 'FriendsView',
+  name: 'LeaderBoardView',
   components: {
-    BaseLayout
+    BaseLayout,
+    Avocado
   }
 });
 </script>
 
 <style scoped>
+.layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  flex: 1;
+  height: 100%;
+  min-height: calc(100vh - 120px);
+  max-width: 500px;
+  margin: auto;
+}
+
+.startGame {
+  text-align: center;
+}
+
 .mt-20 {
   margin-top: 20px;
 }
+
+
 </style>
+
 

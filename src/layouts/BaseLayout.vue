@@ -23,10 +23,10 @@ import Navigation from '../components/Navigation.vue';
 
 .content {
   flex: 1;
-  padding: 40px 20px;
+  padding: 30px 20px;
   display: flex;
   height: 100%;
-  min-height: calc(100vh - 140px);
+  min-height: calc(100vh - 120px);
 }
 
 .footer {

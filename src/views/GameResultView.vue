@@ -1,6 +1,6 @@
 <template>
   <GameLayout>
-    <div v-if="loading" class="loader">Loading...</div>
+    <Loader v-if="loading" class="loader"/>
     <div v-else  class="layout">
       
 
@@ -28,8 +28,8 @@
       <Party class="logo" v-else/>
       <div class="startGame">
         <Button variant="secondary" type="link" v-if="score !== 0">Share your win</Button>
-        <Button v-if="gamesCount > 0" fluid type="button" @click="playQuiz" class="btnAgain">Play Again ({{ gamesCount }} left)</Button>
-        <Button v-else fluid type="button" @click="goHome" class="btnAgain">Go Home</Button>
+        <Button v-if="gamesAvailable > 0" fluid type="button" @click="playQuiz" class="btnAgain">Play Again ({{ gamesAvailable }} left)</Button>
+        <Button v-else fluid type="button" @click="goHome" class="btnAgain">Continue</Button>
         
       </div>
     </div>
@@ -44,10 +44,11 @@ import Button from '../components/Button.vue';
 import { useRouter } from 'vue-router';
 import Party from '../components/ui/icons/Party.vue';
 import BrokenHeart from '../components/ui/icons/BrokenHeart.vue';
+import Loader from '../components/ui/icons/Loader.vue';
 
 const quizStore = useQuizStore();
 
-const gamesCount = computed(() => quizStore.gamesCount);
+const gamesAvailable = computed(() => quizStore.gamesAvailable);
 const score = computed(() => quizStore.score);
 const router = useRouter();
 const loading = computed(() => quizStore.loading);
@@ -72,7 +73,7 @@ onMounted(() => {
   justify-content: space-between;
   flex: 1;
   height: 100%;
-  min-height: calc(100vh - 140px);
+  min-height: calc(100vh - 120px);
   max-width: 500px;
   margin: auto;
 }
@@ -82,7 +83,10 @@ onMounted(() => {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
 }
+
 .mt-20 {
   margin-top: 20px;
 }

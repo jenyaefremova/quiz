@@ -5,19 +5,21 @@ interface Question {
   question: string;
   correct_answer: string;
   difficulty: string;
+  category: string;
   incorrect_answers: string[];
   answers: string[];
 }
 
 export const useQuizStore = defineStore('quiz', {
   state: () => ({
-    gamesCount: 3,
+    gamesAvailable: parseInt(localStorage.getItem('gamesAvailable') || '0', 10),
     score: 0,
-    totalPoints: 0,
+    totalPoints: parseInt(localStorage.getItem('totalPoints') || '0', 10),
     questions: [] as Question[],
     currentIndex: 0,
     showScore: false,
     loading: false,
+    lastIncrementTime: localStorage.getItem('lastIncrementTime') || '',
   }),
   actions: {
     async fetchQuestions() {
@@ -29,6 +31,7 @@ export const useQuizStore = defineStore('quiz', {
           correct_answer: q.correct_answer,
           incorrect_answers: q.incorrect_answers,
           difficulty: q.difficulty,
+          category: q.category,
           answers: [...q.incorrect_answers, q.correct_answer].sort(() => Math.random() - 0.5)
         }));
         this.loading = false;
@@ -55,22 +58,38 @@ export const useQuizStore = defineStore('quiz', {
       if (this.currentIndex === this.questions.length - 1) {
         this.showScore = true;
         this.totalPoints += this.score;
+        localStorage.setItem('totalPoints', this.totalPoints.toString());
+
         router.push('/result');
       } else {
         this.currentIndex++;
       }
     },
-    async playQuiz(router: any) { 
-      if (this.gamesCount > 0) {
+    async playQuiz(router: any) {
+      this.incrementGamesAvailable();
+      if (this.gamesAvailable > 0) {
         this.currentIndex = 0;
         this.showScore = false;
         this.score = 0;
         this.loading = true;
-        this.gamesCount--;
+        this.gamesAvailable--;
+        localStorage.setItem('gamesAvailable', this.gamesAvailable.toString());
         await this.fetchQuestions();
         router.push('/play');
       }
     },
+    incrementGamesAvailable() {
+      const currentTime = new Date().getTime();
+      const lastIncrementTime = new Date(this.lastIncrementTime).getTime();
+      const increaseTime = 24 * 60 * 60 * 1000; // 24 hours
+
+      if (!this.lastIncrementTime || currentTime - lastIncrementTime >= increaseTime) {
+        this.gamesAvailable += 7;
+        this.lastIncrementTime = new Date().toISOString();
+        localStorage.setItem('lastIncrementTime', this.lastIncrementTime);
+        localStorage.setItem('gamesAvailable', this.gamesAvailable.toString());
+      }
+    }
   },
   getters: {
     currentQuestion: (state) => state.questions[state.currentIndex],

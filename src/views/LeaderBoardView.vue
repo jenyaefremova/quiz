@@ -5,7 +5,7 @@
     <div class="layout">
       <div class="statistic">
         <div class="profile">
-          <h1>LeaderBoard</h1>
+          <h1>Leader Board</h1>
           <p class="mt-20">Cooming soon!</p>
         </div>
         <!-- <div class="leaderboard">
@@ -41,7 +41,7 @@ export default defineComponent({
   gap: 20px;
   flex: 1;
   height: 100%;
-  min-height: calc(100vh - 140px);
+  min-height: calc(100vh - 120px);
   max-width: 500px;
   margin: auto;
 }

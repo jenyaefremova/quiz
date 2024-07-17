@@ -2,13 +2,17 @@
   <GameLayout>
     <div class="layout">
       <div class="statistic">
-        <div v-if="loading" class="loader">Loading...</div>
+        <Loader v-if="loading" class="loader"/>
         <div v-else>
           <div v-if="!showScore">
             <div class="question" v-if="currentQuestion">
               <div class="questionData">
                 <p class="questionName">{{ questionNumber }} / {{ questions.length }}</p>
-                <p>Difficulty: <span class="level" :class="difficultyClass">{{ currentQuestion.difficulty }}</span></p>
+                <div class="description">
+                  <p v-html="currentQuestion.category"></p>
+                  <p>Difficulty: <span class="level" :class="difficultyClass">{{ currentQuestion.difficulty }}</span></p>
+                </div>
+                
               </div>
               <p v-html="currentQuestion.question" class="questionBody"></p>
               <div class="answers">
@@ -18,6 +22,7 @@
                     :key="i"
                     fluid
                     type="button"
+                    :disabled="isButtonDisabled"
                     :variant="getButtonClass(answer)"
                     @click="checkAnswer(answer)"
                   >
@@ -39,6 +44,7 @@ import { useQuizStore } from '../stores/quiz';
 import GameLayout from '../layouts/GameLayout.vue';
 import Button from '../components/Button.vue';
 import router from '../router';
+import Loader from '../components/ui/icons/Loader.vue';
 
 const quizStore = useQuizStore();
 
@@ -76,12 +82,16 @@ const getButtonClass = (answer: string) => {
   return 'secondary';
 };
 
+const isButtonDisabled = ref(false);
+
 const checkAnswer = (answer: string) => {
   selectedAnswer.value = answer;
+  isButtonDisabled.value = true;
   setTimeout(() => {
     quizStore.checkAnswer(answer, router);
     selectedAnswer.value = null;
-  }, 1500);
+    isButtonDisabled.value = false;
+  }, 1000);
 };
 
 onMounted(() => {
@@ -93,16 +103,25 @@ onMounted(() => {
 .layout {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   flex: 1;
   height: 100%;
-  min-height: calc(100vh - 140px);
+  min-height: calc(100vh - 120px);
   max-width: 500px;
   margin: auto;
 }
 
+.statistic {
+  position: relative;
+}
+
 .loader {
-  margin-top: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
 }
 
 .question, .btnAgain, .questionBody {
@@ -112,7 +131,13 @@ onMounted(() => {
 .questionData {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .level {
